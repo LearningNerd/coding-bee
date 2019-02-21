@@ -15,26 +15,24 @@ main =
 
 
 type alias Team =
-    { player_1 : String
-    , player_2 : String
+    { teamName : String
+    , players : List String
     }
 
 
 type alias Model =
     { teams : List Team
+    , formDataTeamName : String
     }
 
 
 init : Model
 init =
     { teams =
-        [ { player_1 = "team 1 p 1"
-          , player_2 = "team 1 p 2"
-          }
-        , { player_1 = "team 2 p 1"
-          , player_2 = "team 2 p 2"
-          }
+        [ Team "Evil Little Monsters" [ "Sebastian", "Vance" ]
+        , Team "Jumping Sloths" [ "Manny", "Terry" ]
         ]
+    , formDataTeamName = ""
     }
 
 
@@ -43,21 +41,19 @@ init =
 
 
 type Msg
-    = Add String
+    = AddTeam
+    | InputTeamName String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Add str ->
-            let
-                test_team =
-                    { player_1 = str
-                    , player_2 = str
-                    }
-            in
-            { model | teams = test_team :: model.teams }
-
+        --TODO: don't let teams have the same name
+        InputTeamName teamName -> 
+            { model | formDataTeamName = teamName}
+        AddTeam ->
+            { model | teams = Team model.formDataTeamName [] :: model.teams }
+        
 
 
 -- VIEW
@@ -66,15 +62,16 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ placeholder "Yo imma placehold this", onInput Add ]
+        [ input [ placeholder "Team name", onInput InputTeamName ]
             []
+        , button [ onClick AddTeam ] [ text "Add team" ]
         , displayTeams model
         ]
 
 
 displayTeams : Model -> Html msg
 displayTeams model =
-    h1 [] [ text "teams go here" ]
+    ul [] (List.map (\team -> li [] [ text team.teamName ]) model.teams)
 
 
 
