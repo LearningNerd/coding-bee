@@ -27,7 +27,14 @@ type alias Model =
 
 init : Model
 init =
-    { teams = []
+    { teams =
+        [ { player_1 = "team 1 p 1"
+          , player_2 = "team 1 p 2"
+          }
+        , { player_1 = "team 2 p 1"
+          , player_2 = "team 2 p 2"
+          }
+        ]
     }
 
 
@@ -59,11 +66,19 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ placeholder "Yo imma placehold this", onInput Add ] []
+        [ input [ placeholder "Yo imma placehold this", onInput Add ]
+            []
+        , displayTeams model
         ]
 
 
+displayTeams : Model -> Html msg
+displayTeams model =
+    h1 [] [ text "teams go here" ]
 
+
+
+-- List.map () model.teams
 -- createTeam : String -> Team
 -- createTeam str =
 --     { player_1 = str
